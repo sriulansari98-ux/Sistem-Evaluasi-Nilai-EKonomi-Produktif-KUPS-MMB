@@ -3,77 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluasi KUPS</title>
-    <!-- Tailwind CSS untuk desain instan -->
+    <title>Dashboard Evaluasi & Dinamika Kelas KUPS</title>
+    <!-- Tailwind CSS Modern -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- Font Awesome untuk Ikon Menarik -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <!-- Chart.js untuk Grafik Interaktif -->
     <script src="https://jsdelivr.net"></script>
 </head>
-<body class="bg-gray-100 p-6">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
 
-    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-bold text-center text-emerald-700 mb-6">
-            Sistem Evaluasi Kelas KUPS
-        </h2>
-
-        <!-- FORM INPUT -->
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium">Nama KUPS</label>
-                <input type="text" id="nama" class="w-full border p-2 rounded" placeholder="Contoh: KUPS Madu">
+    <!-- NAVBAR / HEADER -->
+    <header class="bg-gradient-to-r from-emerald-700 to-teal-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/20 p-2.5 rounded-lg backdrop-blur-sm">
+                    <i class="fa-solid fa-chart-line text-xl text-yellow-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight md:text-xl">SIM-KUPS MMB</h1>
+                    <p class="text-xs text-emerald-100 font-medium">Sistem Informasi Evaluasi Nilai Ekonomi & Dinamika Kelas</p>
+                </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium">Pendapatan Bulanan (Rp)</label>
-                <input type="number" id="dana" class="w-full border p-2 rounded" placeholder="Contoh: 5000000">
+            <div class="hidden md:flex items-center space-x-2 bg-emerald-800/40 px-4 py-1.5 rounded-full border border-emerald-500/30 text-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-semibold">KUPS Tesis Edition</span>
             </div>
-            <div>
-                <label class="block text-sm font-medium">Skor Keaktifan Lembaga (1-10)</label>
-                <input type="number" id="aktif" class="w-full border p-2 rounded" placeholder="1 sampai 10">
-            </div>
-            <button onclick="hitung()" class="w-full bg-emerald-600 text-white p-2 rounded font-bold hover:bg-emerald-700">
-                Hitung Evaluasi
-            </button>
         </div>
+    </header>
 
-        <!-- TEMPAT HASIL -->
-        <div id="hasil" class="mt-6 p-4 bg-gray-50 rounded hidden">
-            <h3 class="font-bold text-lg text-gray-700">Hasil Analisis:</h3>
-            <p class="mt-2">Skor Total: <span id="skor" class="font-bold text-emerald-600">0</span></p>
-            <p>Predikat Kelas: <span id="kelas" class="font-bold text-blue-600">-</span></p>
-        </div>
-    </div>
+    <!-- KONTEN UTAMA -->
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- PANEL INPUT INDIKATOR (4 Kolom) -->
+            <section class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-6 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-sliders text-emerald-600 text-lg"></i>
+                    <h2 class="text-base font-bold text-slate-800">Parameter Penilaian KUPS</h2>
+                </div>
+                
+                <form id="kupsForm" class="space-y-5">
+                    <!-- Identitas -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Nama Kelompok KUPS</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-users absolute left-3 top-3 text-slate-400 text-sm"></i>
+                            <input type="text" id="namaKups" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:border-emerald-500 focus:bg-white transition-all shadow-inner" placeholder="Contoh: KUPS Madu Klanceng MMB" required>
+                        </div>
+                    </div>
 
-    <!-- LOGIKA PROGRES -->
-    <script>
-        function hitung() {
-            var namaKups = document.getElementById('nama').value;
-            var uang = parseFloat(document.getElementById('dana').value) || 0;
-            var nilaiAktif = parseFloat(document.getElementById('aktif').value) || 0;
+                    <!-- FAKTOR 1: NILAI EKONOMI PRODUCTIVE -->
+                    <div class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-100/80 space-y-4">
+                        <div class="flex items-center space-x-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-wallet text-emerald-600"></i>
+                            <span>1. Faktor Ekonomi Produktif</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Rata-rata Pendapatan Bulanan (Rp)</label>
+                            <input type="number" id="pendapatan" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="Misal: 7500000" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Volume Produksi Bulanan (Kg/Unit)</label>
+                            <input type="number" id="produksi" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="Misal: 200" required>
+                        </div>
+                    </div>
 
-            if(!namaKups || uang <= 0 || nilaiAktif <= 0) {
-                alert("Mohon isi semua data!");
-                return;
-            }
+                    <!-- FAKTOR 2: DINAMIKA KELAS -->
+                    <div class="bg-sky-50/60 p-4 rounded-xl border border-sky-100/80 space-y-4">
+                        <div class="flex items-center space-x-2 text-sky-800 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-layer-group text-sky-600"></i>
+                            <span>2. Faktor Dinamika Kelas</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Keaktifan Kelembagaan & Pengurus (Skor 1-10)</label>
+                            <input type="number" id="keaktifan" min="1" max="10" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:border-sky-500" placeholder="Skor internal tata kelola" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Jangkauan & Kemitraan Pasar (Skor 1-10)</label>
+                            <input type="number" id="pasar" min="1" max="10" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:border-sky-500" placeholder="Skor pemasaran & mitra luar" required>
+                        </div>
+                    </div>
 
-            // Hitung skor sederhana (Maksimal 100)
-            var poinUang = Math.min((uang / 10000000) * 50, 50); // Maks 50 poin jika Rp 10 juta
-            var poinAktif = (nilaiAktif / 10) * 50;              // Maks 50 poin jika skor 10
-            var total = Math.round(poinUang + poinAktif);
+                    <button type="button" onclick="prosesEvaluasiDashboard()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer text-center text-sm flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>Proses Analisis Kelas</span>
+                    </button>
+                </form>
+            </section>
 
-            // Menentukan tingkatan kelas KUPS
-            var grade = "";
-            if (total < 40) {
-                grade = "BLUE (Pemula)";
-            } else if (total <= 70) {
-                grade = "SILVER / GOLD (Berkembang)";
-            } else {
-                grade = "PLATINUM (Mandiri)";
-            }
+            <!-- PANEL HASIL & VISUALISASI DASHBOARD (7 Kolom) -->
+            <section class="lg:col-span-7 space-y-6">
+                
+                <!-- Tampilan Awal Sebelum di-Hitung -->
+                <div id="placeholderHasil" class="bg-white p-12 rounded-2xl shadow-sm border border-slate-100 text-center py-24 flex flex-col items-center justify-center">
+                    <div class="bg-slate-100 p-4 rounded-full text-slate-400 mb-4 animate-bounce">
+                        <i class="fa-solid fa-folder-open text-3xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-700 mb-1">Belum Ada Data Ditampilkan</h3>
+                    <p class="text-sm text-slate-400 max-w-sm mx-auto">Isi indikator nilai ekonomi dan dinamika kelas KUPS di panel kiri untuk menghasilkan kalkulasi kelas otomatis.</p>
+                </div>
 
-            // Tampilkan hasil di layar
-            document.getElementById('hasil').classList.remove('hidden');
-            document.getElementById('skor').innerText = total;
-            document.getElementById('kelas').innerText = grade;
-        }
-    </script>
+                <!-- Tampilan Hasil Setelah Perhitungan -->
+                <div id="kontenHasil" class="hidden space-y-6">
+                    
+                    <!-- KARTU INDIKATOR UTAMA -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl text-xl">
+                                <i class="fa-solid fa-gauge-high"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-slate-400 block">Skor Kumulatif</span>
+                                <span id="resSkor" class="text-2xl font-extrabold text-slate-800">0</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                            <div id="iconKelasColor" class="p-3 bg-blue-50 text-blue-600 rounded-xl text-xl">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-slate-400 block">Klasifikasi Tingkat KUPS</span>
+                                <span id="resKelas" class="text-lg font-extrabold text-slate-800">-</span>
+                            </div>
+                        </div>
+                    </div>
 
-</body>
-</html>
+                    <!-- KARTU GRAFIK INTERAKTIF -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <i class="fa-solid fa-chart-bar text-purple-600 text-sm"></i>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Visualisasi Distribusi Skor Indikator</h3>
+                        </div>
+                        <div class="relative w-full h-64">
+                            <canvas id="grafikKups"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- REKOMENDASI STRATEGIS -->
+                    <div id="cardRekomendasi" class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-amber-500">
+                        <div class="flex items-center space-x-2 text-amber-800 font-bold text-sm mb-2">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <span>Rekomendasi Peningkatan Dinamika Kelas:</span>
+                        </div>
